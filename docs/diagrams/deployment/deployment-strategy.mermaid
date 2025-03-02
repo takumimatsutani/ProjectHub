@@ -1,0 +1,78 @@
+graph TD
+    Start((開始)) --> Phase1[フェーズ1: モノリスMVP]
+    Phase1 --> Phase2[フェーズ2: スケールアップ]
+    Phase2 --> Phase3[フェーズ3: マイクロサービス化]
+    
+    subgraph "フェーズ1: モノリスMVP"
+        MonoFE[Next.jsフロントエンド\n単一コンテナ]
+        MonoBE[Spring Bootバックエンド\n単一コンテナ]
+        MonoDB[RDS単一インスタンス]
+        BasicS3[基本的なS3\nファイルストレージ]
+        MonoLB[シンプルなALB]
+        SimpleAuth[基本認証機能]
+        BasicTask[基本タスク管理]
+        
+        MonoFE --- MonoBE
+        MonoBE --- MonoDB
+        MonoBE --- BasicS3
+        MonoFE --- MonoLB
+        MonoBE --- SimpleAuth
+        MonoBE --- BasicTask
+    end
+    
+    subgraph "フェーズ2: スケールアップ"
+        ScaleFE[Next.jsフロントエンド\n複数コンテナ]
+        ScaleBE[Spring Bootバックエンド\n複数コンテナ]
+        CacheLayer[ElastiCache\nレディスキャッシュ]
+        MultiAZDB[RDSマルチAZ]
+        CDNLayer[CloudFront CDN]
+        AdvAuth[高度な認証\nSSOサポート]
+        CollabFeatures[コラボレーション機能]
+        AdvancedReports[高度なレポート]
+        
+        ScaleFE --- ScaleBE
+        ScaleBE --- CacheLayer
+        ScaleBE --- MultiAZDB
+        ScaleFE --- CDNLayer
+        ScaleBE --- AdvAuth
+        ScaleBE --- CollabFeatures
+        ScaleBE --- AdvancedReports
+    end
+    
+    subgraph "フェーズ3: マイクロサービス化"
+        MicroFE[Next.jsフロントエンド\nスケーラブル]
+        
+        AuthMS[認証サービス]
+        ProjectMS[プロジェクト管理\nサービス]
+        TaskMS[タスク管理\nサービス]
+        ReportMS[レポート\nサービス]
+        NotificationMS[通知サービス]
+        
+        ApiGateway[API Gateway]
+        ServiceMesh[サービスメッシュ]
+        DistributedTracing[分散トレーシング]
+        AutoScaling[オートスケーリング]
+        MultiRegion[マルチリージョン\nデプロイ]
+        
+        MicroFE --- ApiGateway
+        ApiGateway --- AuthMS
+        ApiGateway --- ProjectMS
+        ApiGateway --- TaskMS
+        ApiGateway --- ReportMS
+        ApiGateway --- NotificationMS
+        
+        AuthMS --- ServiceMesh
+        ProjectMS --- ServiceMesh
+        TaskMS --- ServiceMesh
+        ReportMS --- ServiceMesh
+        NotificationMS --- ServiceMesh
+        
+        ServiceMesh --- DistributedTracing
+        ServiceMesh --- AutoScaling
+        AutoScaling --- MultiRegion
+    end
+    
+    %% フェーズごとの詳細
+    Phase1 -.- MonoFE
+    Phase2 -.- ScaleFE
+    Phase3 -.- MicroFE

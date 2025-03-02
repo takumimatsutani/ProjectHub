@@ -1,0 +1,105 @@
+sequenceDiagram
+    actor User
+    participant Frontend as Next.js Frontend
+    participant API as API Gateway
+    participant Auth as Auth Service
+    participant JWT as JWT Service
+    participant UserDB as User Database
+    participant Resource as Protected Resource
+    
+    %% 認証フロー
+    User->>Frontend: ログイン画面アクセス
+    Frontend->>Frontend: ログイン画面表示
+    User->>Frontend: 認証情報入力(メール/パスワード)
+    Frontend->>API: POST /api/auth/login
+    API->>Auth: authenticate(email, password)
+    Auth->>UserDB: findByEmail(email)
+    UserDB->>Auth: User
+    Auth->>Auth: validatePassword(password, passwordHash)
+    
+    alt 認証成功
+        Auth->>JWT: generateToken(userId, roles)
+        JWT->>Auth: accessToken, refreshToken
+        Auth->>API: tokens
+        API->>Frontend: tokens
+        Frontend->>Frontend: トークン保存(localStorage/cookie)
+        Frontend->>User: ダッシュボードにリダイレクト
+    else 認証失敗
+        Auth->>API: 認証エラー
+        API->>Frontend: 401 Unauthorized
+        Frontend->>User: エラーメッセージ表示
+    end
+    
+    %% 保護されたリソースアクセスフロー
+    User->>Frontend: 保護されたページ/リソースにアクセス
+    Frontend->>API: リクエスト with Authorization Header
+    API->>JWT: validateToken(token)
+    
+    alt トークン有効
+        JWT->>API: 有効なトークン
+        API->>Resource: リクエスト転送(userId, roles)
+        Resource->>Resource: アクセス権チェック
+        
+        alt アクセス権あり
+            Resource->>API: リソースデータ
+            API->>Frontend: リソースデータ
+            Frontend->>User: データ表示
+        else アクセス権なし
+            Resource->>API: 403 Forbidden
+            API->>Frontend: 403 Forbidden
+            Frontend->>User: 権限エラーメッセージ
+        end
+        
+    else トークン期限切れ
+        JWT->>API: 期限切れトークン
+        API->>Frontend: 401 Unauthorized
+        Frontend->>API: POST /api/auth/refresh (refreshToken)
+        API->>JWT: validateRefreshToken(token)
+        
+        alt リフレッシュトークン有効
+            JWT->>JWT: generateNewTokens(userId, roles)
+            JWT->>API: 新しいtokens
+            API->>Frontend: 新しいtokens
+            Frontend->>Frontend: トークン更新
+            Frontend->>API: 元のリクエスト再送
+            
+            %% 以降は有効なトークンフローと同じ
+            
+        else リフレッシュトークン無効
+            JWT->>API: 無効なトークン
+            API->>Frontend: 401 Unauthorized
+            Frontend->>Frontend: ログアウト処理
+            Frontend->>User: ログイン画面にリダイレクト
+        end
+        
+    else トークン無効
+        JWT->>API: 無効なトークン
+        API->>Frontend: 401 Unauthorized
+        Frontend->>Frontend: ログアウト処理
+        Frontend->>User: ログイン画面にリダイレクト
+    end
+    
+    %% SSO認証フロー
+    User->>Frontend: SSOログイン選択(Google/Microsoft)
+    Frontend->>Frontend: OAuth認証URLにリダイレクト
+    User->>SSOProvider: SSOプロバイダーで認証
+    SSOProvider->>Frontend: 認証コード付きリダイレクト
+    Frontend->>API: POST /api/auth/sso/callback
+    API->>Auth: verifySSOToken(code, provider)
+    Auth->>SSOProvider: トークン検証
+    SSOProvider->>Auth: ユーザー情報
+    
+    alt 既存ユーザー
+        Auth->>UserDB: findByEmail(email)
+        UserDB->>Auth: User
+    else 新規ユーザー
+        Auth->>UserDB: createUser(userInfo)
+        UserDB->>Auth: User
+    end
+    
+    Auth->>JWT: generateToken(userId, roles)
+    JWT->>Auth: tokens
+    Auth->>API: tokens
+    API->>Frontend: tokens
+    Frontend->>Frontend: トークン保存
+    Frontend->>User: ダッシュボードにリダイレクト

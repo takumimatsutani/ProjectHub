@@ -1,0 +1,89 @@
+flowchart TB
+    subgraph "AWS Cloud"
+        subgraph "VPC"
+            subgraph "Public Subnet"
+                ALB["Application Load Balancer"]
+                BastionHost["Bastion Host"]
+            end
+            
+            subgraph "Private Subnet 1 (AZ-a)"
+                ECS1["ECS/EKS Cluster (Frontend)"]
+                ECS2["ECS/EKS Cluster (Backend)"]
+                RDS_Master["RDS Master"]
+                ElastiCache1["ElastiCache (Redis)"]
+            end
+            
+            subgraph "Private Subnet 2 (AZ-b)"
+                ECS3["ECS/EKS Cluster (Frontend)"]
+                ECS4["ECS/EKS Cluster (Backend)"]
+                RDS_Standby["RDS Standby"]
+                ElastiCache2["ElastiCache (Redis)"]
+            end
+        end
+        
+        Route53["Route 53"]
+        CloudFront["CloudFront"]
+        S3_Static["S3 (Static Assets)"]
+        S3_Files["S3 (User Files)"]
+        ECR["Elastic Container Registry"]
+        
+        CloudWatch["CloudWatch"]
+        Xray["X-Ray"]
+        
+        IAM["IAM Roles & Policies"]
+        SecretsManager["Secrets Manager"]
+        
+        SQS["SQS Queues"]
+        SNS["SNS Topics"]
+    end
+    
+    Internet["Internet"] --> Route53
+    Route53 --> CloudFront
+    CloudFront --> S3_Static
+    CloudFront --> ALB
+    
+    ALB --> ECS1
+    ALB --> ECS3
+    
+    ECS1 --> ECS2
+    ECS3 --> ECS4
+    
+    ECS2 --> RDS_Master
+    ECS4 --> RDS_Master
+    RDS_Master <--> RDS_Standby
+    
+    ECS2 --> ElastiCache1
+    ECS4 --> ElastiCache2
+    ElastiCache1 <--> ElastiCache2
+    
+    ECS2 --> S3_Files
+    ECS4 --> S3_Files
+    
+    ECS1 -.-> CloudWatch
+    ECS2 -.-> CloudWatch
+    ECS3 -.-> CloudWatch
+    ECS4 -.-> CloudWatch
+    
+    ECS1 -.-> Xray
+    ECS2 -.-> Xray
+    ECS3 -.-> Xray
+    ECS4 -.-> Xray
+    
+    ECS1 -.-> ECR
+    ECS2 -.-> ECR
+    ECS3 -.-> ECR
+    ECS4 -.-> ECR
+    
+    ECS2 <--> SQS
+    ECS4 <--> SQS
+    SQS <--> SNS
+    
+    ECS1 -.-> SecretsManager
+    ECS2 -.-> SecretsManager
+    ECS3 -.-> SecretsManager
+    ECS4 -.-> SecretsManager
+    
+    IAM -.-> ECS1
+    IAM -.-> ECS2
+    IAM -.-> ECS3
+    IAM -.-> ECS4

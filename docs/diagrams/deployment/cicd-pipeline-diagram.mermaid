@@ -1,0 +1,102 @@
+flowchart LR
+    subgraph "開発環境"
+        Dev["開発者"]
+        Git["Git Repository\n(GitHub/GitLab)"]
+    end
+    
+    subgraph "CI/CD パイプライン"
+        PR["Pull Request"]
+        
+        subgraph "Frontend CI"
+            FE_Lint["ESLint\n& Prettier"]
+            FE_Test["Jest Tests"]
+            FE_Build["Next.js Build"]
+        end
+        
+        subgraph "Backend CI"
+            BE_Lint["Checkstyle\n& PMD"]
+            BE_Test["JUnit Tests"]
+            BE_Security["OWASP\n依存関係チェック"]
+            BE_Build["Gradle Build"]
+        end
+        
+        Review["コードレビュー"]
+        Merge["マージ to main"]
+        
+        subgraph "Image Build"
+            FE_Docker["Frontend\nDocker Build"]
+            BE_Docker["Backend\nDocker Build"]
+            Push_ECR["Push to ECR"]
+        end
+    end
+    
+    subgraph "デプロイメントステージ"
+        subgraph "開発環境デプロイ"
+            Dev_Deploy["開発環境\n自動デプロイ"]
+            Dev_Test["自動テスト\n実行"]
+        end
+        
+        subgraph "ステージング環境デプロイ"
+            Stage_Deploy["ステージング環境\n自動デプロイ"]
+            Stage_Test["統合テスト\n実行"]
+            Stage_Approval["QAチーム\n承認"]
+        end
+        
+        subgraph "本番環境デプロイ"
+            Prod_Approval["本番デプロイ\n承認"]
+            Prod_Deploy["本番環境\nデプロイ"]
+            Canary["カナリアリリース\nトラフィック5%"]
+            Full_Deploy["完全リリース\nトラフィック100%"]
+            Rollback["障害検知時\n自動ロールバック"]
+        end
+    end
+    
+    subgraph "モニタリング"
+        Alerts["CloudWatch\nアラート"]
+        Metrics["パフォーマンス\nメトリクス"]
+        Logs["集中ログ\n管理"]
+    end
+    
+    Dev --> Git
+    Git --> PR
+    
+    PR --> FE_Lint
+    PR --> BE_Lint
+    
+    FE_Lint --> FE_Test
+    FE_Test --> FE_Build
+    
+    BE_Lint --> BE_Test
+    BE_Test --> BE_Security
+    BE_Security --> BE_Build
+    
+    FE_Build --> Review
+    BE_Build --> Review
+    
+    Review --> Merge
+    Merge --> FE_Docker
+    Merge --> BE_Docker
+    
+    FE_Docker --> Push_ECR
+    BE_Docker --> Push_ECR
+    
+    Push_ECR --> Dev_Deploy
+    Dev_Deploy --> Dev_Test
+    
+    Dev_Test --> Stage_Deploy
+    Stage_Deploy --> Stage_Test
+    Stage_Test --> Stage_Approval
+    
+    Stage_Approval --> Prod_Approval
+    Prod_Approval --> Prod_Deploy
+    Prod_Deploy --> Canary
+    Canary --> Full_Deploy
+    
+    Canary -.-> Rollback
+    Full_Deploy -.-> Rollback
+    
+    Prod_Deploy -.-> Alerts
+    Prod_Deploy -.-> Metrics
+    Prod_Deploy -.-> Logs
+    
+    Alerts -.-> Rollback

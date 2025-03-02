@@ -1,0 +1,39 @@
+gantt
+    title ProjectHub 実装計画
+    dateFormat  YYYY-MM-DD
+    section フェーズ1：MVP
+    プロジェクト準備                  :a1, 2025-04-01, 14d
+    開発環境構築                      :a2, after a1, 7d
+    CI/CD パイプライン構築           :a3, after a2, 7d
+    認証基盤実装                      :a4, after a3, 14d
+    基本データモデル実装              :a5, after a4, 14d
+    ユーザー管理機能                  :a6, after a5, 10d
+    プロジェクト基本機能              :a7, after a6, 14d
+    タスク基本機能                    :a8, after a7, 14d
+    基本UI実装                        :a9, after a8, 14d
+    MVP内部テスト                     :a10, after a9, 7d
+    MVP限定リリース                   :a11, after a10, 1d
+    
+    section フェーズ2：拡張機能
+    パフォーマンス最適化              :b1, after a11, 14d
+    高度な検索機能                    :b2, after b1, 14d
+    カスタムダッシュボード            :b3, after b2, 21d
+    レポート機能                      :b4, after b3, 21d
+    コメント・添付ファイル機能        :b5, after b2, 14d
+    通知システム実装                  :b6, after b5, 14d
+    カレンダー・スケジュール機能      :b7, after b6, 14d
+    GitHubなど外部連携                :b8, after b6, 14d
+    拡張機能テスト                    :b9, after b7, 14d
+    一般リリース                      :milestone, b10, after b9, 0d
+    
+    section フェーズ3：エンタープライズ
+    マイクロサービス準備              :c1, after b10, 21d
+    認証サービス分離                  :c2, after c1, 21d
+    プロジェクト管理サービス分離      :c3, after c2, 21d
+    タスク管理サービス分離            :c4, after c3, 21d
+    レポートサービス分離              :c5, after c4, 21d
+    通知サービス分離                  :c6, after c4, 21d
+    サービスメッシュ導入              :c7, after c6, 14d
+    マルチテナント機能拡張            :c8, after c7, 21d
+    高度分析・予測機能                :c9, after c8, 28d
+    エンタープライズ版リリース        :milestone, c10, after c9, 0d

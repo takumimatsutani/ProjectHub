@@ -1,0 +1,193 @@
+classDiagram
+    class BaseEntity {
+        +Long id
+        +LocalDateTime createdAt
+        +LocalDateTime updatedAt
+        +String createdBy
+        +String updatedBy
+    }
+    
+    class User {
+        +String email
+        +String fullName
+        +String passwordHash
+        +UserRole role
+        +boolean enabled
+        +authenticate()
+        +changePassword()
+    }
+    
+    class Organization {
+        +String name
+        +String domain
+        +String logoUrl
+        +addMember()
+        +removeMember()
+    }
+    
+    class Team {
+        +String name
+        +String description
+        +addMember()
+        +removeMember()
+    }
+    
+    class Project {
+        +String name
+        +String key
+        +String description
+        +ProjectStatus status
+        +LocalDate startDate
+        +LocalDate endDate
+        +addMember()
+        +createSprint()
+        +updateStatus()
+    }
+    
+    class Sprint {
+        +String name
+        +String goal
+        +LocalDate startDate
+        +LocalDate endDate
+        +SprintStatus status
+        +startSprint()
+        +endSprint()
+    }
+    
+    class Task {
+        +String title
+        +String description
+        +TaskType type
+        +TaskStatus status
+        +TaskPriority priority
+        +Integer storyPoints
+        +User assignee
+        +LocalDate dueDate
+        +updateStatus()
+        +assign()
+        +trackTime()
+    }
+    
+    class Comment {
+        +String content
+        +addAttachment()
+    }
+    
+    class TimeRecord {
+        +LocalDateTime startTime
+        +LocalDateTime endTime
+        +String description
+        +calculateDuration()
+    }
+    
+    class Attachment {
+        +String filename
+        +String contentType
+        +Long fileSize
+        +String s3Key
+        +generatePresignedUrl()
+    }
+    
+    class UserRepository {
+        +findByEmail()
+        +findByOrganization()
+    }
+    
+    class ProjectRepository {
+        +findByKey()
+        +findByTeam()
+        +findByMember()
+    }
+    
+    class TaskRepository {
+        +findByProject()
+        +findByAssignee()
+        +findByStatus()
+        +countByProjectAndStatus()
+    }
+    
+    class UserService {
+        +register()
+        +authenticate()
+        +updateProfile()
+        +getUserActivity()
+    }
+    
+    class ProjectService {
+        +createProject()
+        +updateProject()
+        +assignMembers()
+        +getProjectMetrics()
+    }
+    
+    class TaskService {
+        +createTask()
+        +updateTask()
+        +changeStatus()
+        +assignTask()
+        +searchTasks()
+    }
+    
+    class AuthController {
+        +login()
+        +logout()
+        +refreshToken()
+    }
+    
+    class ProjectController {
+        +getProjects()
+        +getProjectById()
+        +createProject()
+        +updateProject()
+        +deleteProject()
+    }
+    
+    class TaskController {
+        +getTasks()
+        +getTaskById()
+        +createTask()
+        +updateTask()
+        +deleteTask()
+        +changeTaskStatus()
+    }
+    
+    class SecurityConfig {
+        +configure()
+        +jwtTokenFilter()
+        +corsFilter()
+    }
+    
+    BaseEntity <|-- User
+    BaseEntity <|-- Organization
+    BaseEntity <|-- Team
+    BaseEntity <|-- Project
+    BaseEntity <|-- Sprint
+    BaseEntity <|-- Task
+    BaseEntity <|-- Comment
+    BaseEntity <|-- TimeRecord
+    BaseEntity <|-- Attachment
+    
+    Organization "1" -- "many" User : has >
+    Organization "1" -- "many" Team : has >
+    Team "1" -- "many" User : has >
+    Team "1" -- "many" Project : owns >
+    Project "1" -- "many" Sprint : has >
+    Project "1" -- "many" Task : has >
+    Task "1" -- "many" Comment : has >
+    Task "1" -- "many" TimeRecord : has >
+    Comment "1" -- "many" Attachment : has >
+    User "1" -- "many" Task : assigned to >
+    
+    UserRepository -- User : manages >
+    ProjectRepository -- Project : manages >
+    TaskRepository -- Task : manages >
+    
+    UserService -- UserRepository : uses >
+    ProjectService -- ProjectRepository : uses >
+    TaskService -- TaskRepository : uses >
+    
+    AuthController -- UserService : uses >
+    ProjectController -- ProjectService : uses >
+    TaskController -- TaskService : uses >
+    
+    SecurityConfig -- UserService : uses >

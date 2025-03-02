@@ -1,0 +1,145 @@
+erDiagram
+    ORGANIZATIONS ||--o{ USERS : contains
+    ORGANIZATIONS ||--o{ TEAMS : contains
+    TEAMS }o--o{ USERS : includes
+    TEAMS ||--o{ PROJECTS : manages
+    PROJECTS }o--o{ USERS : includes
+    PROJECTS ||--o{ SPRINTS : has
+    PROJECTS ||--o{ TASKS : contains
+    SPRINTS ||--o{ TASKS : includes
+    TASKS ||--o{ SUB_TASKS : contains
+    TASKS ||--o{ COMMENTS : has
+    TASKS ||--o{ ATTACHMENTS : has
+    TASKS ||--o{ TIME_RECORDS : has
+    COMMENTS ||--o{ ATTACHMENTS : has
+    USERS ||--o{ COMMENTS : writes
+    USERS ||--o{ TASKS : assigned
+    
+    ORGANIZATIONS {
+        bigint id PK
+        varchar name
+        varchar domain
+        varchar logo_url
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    USERS {
+        bigint id PK
+        varchar email
+        varchar full_name
+        varchar password_hash
+        varchar role
+        boolean enabled
+        bigint organization_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    TEAMS {
+        bigint id PK
+        varchar name
+        varchar description
+        bigint organization_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    TEAM_USERS {
+        bigint team_id FK
+        bigint user_id FK
+        varchar role
+        timestamp joined_at
+    }
+    
+    PROJECTS {
+        bigint id PK
+        varchar name
+        varchar key
+        varchar description
+        varchar status
+        date start_date
+        date end_date
+        bigint team_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    PROJECT_USERS {
+        bigint project_id FK
+        bigint user_id FK
+        varchar role
+        timestamp joined_at
+    }
+    
+    SPRINTS {
+        bigint id PK
+        varchar name
+        varchar goal
+        date start_date
+        date end_date
+        varchar status
+        bigint project_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    TASKS {
+        bigint id PK
+        varchar title
+        text description
+        varchar type
+        varchar status
+        varchar priority
+        integer story_points
+        bigint assignee_id FK
+        date due_date
+        bigint project_id FK
+        bigint sprint_id FK
+        bigint parent_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    SUB_TASKS {
+        bigint id PK
+        varchar title
+        text description
+        varchar status
+        bigint task_id FK
+        bigint assignee_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    COMMENTS {
+        bigint id PK
+        text content
+        bigint task_id FK
+        bigint user_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    ATTACHMENTS {
+        bigint id PK
+        varchar filename
+        varchar content_type
+        bigint file_size
+        varchar s3_key
+        bigint task_id FK
+        bigint comment_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    TIME_RECORDS {
+        bigint id PK
+        timestamp start_time
+        timestamp end_time
+        text description
+        bigint task_id FK
+        bigint user_id FK
+        timestamp created_at
+        timestamp updated_at
+    }

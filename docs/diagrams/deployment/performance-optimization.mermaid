@@ -1,0 +1,76 @@
+flowchart TB
+    subgraph "フロントエンドパフォーマンス"
+        direction TB
+        SSR["Server-Side Rendering"]
+        CodeSplit["コード分割"]
+        LazyLoad["遅延読み込み"]
+        ImgOpt["画像最適化"]
+        BundleOpt["バンドル最適化"]
+        FontOpt["フォント最適化"]
+        MemCache["メモ化"]
+    end
+    
+    subgraph "バックエンドパフォーマンス"
+        direction TB
+        DBIndex["データベースインデックス"]
+        QueryOpt["クエリ最適化"]
+        NPlusOne["N+1クエリ問題対策"]
+        DataCache["データキャッシュ"]
+        AsyncProc["非同期処理"]
+        BatchProc["バッチ処理"]
+    end
+    
+    subgraph "ネットワークパフォーマンス"
+        direction TB
+        CDN["CDN活用"]
+        HTTPCache["HTTPキャッシュ"]
+        Compression["GZip圧縮"]
+        HTTP2["HTTP/2有効化"]
+        MinReq["リクエスト最小化"]
+    end
+    
+    subgraph "スケーリング戦略"
+        direction TB
+        HorizScale["水平スケーリング"]
+        AutoScale["オートスケーリング"]
+        DBReplica["RDSリードレプリカ"]
+        ShardDB["DBシャーディング"]
+        LoadDist["負荷分散"]
+    end
+    
+    subgraph "モニタリング・最適化"
+        direction TB
+        APM["アプリケーションパフォーマンスモニタリング"]
+        RealUMon["リアルユーザーモニタリング"]
+        Profiling["プロファイリング"]
+        Bottleneck["ボトルネック分析"]
+        PerTest["パフォーマンステスト"]
+    end
+    
+    SSR --> CodeSplit
+    CodeSplit --> LazyLoad
+    LazyLoad --> ImgOpt
+    ImgOpt --> BundleOpt
+    BundleOpt --> FontOpt
+    FontOpt --> MemCache
+    
+    DBIndex --> QueryOpt
+    QueryOpt --> NPlusOne
+    NPlusOne --> DataCache
+    DataCache --> AsyncProc
+    AsyncProc --> BatchProc
+    
+    CDN --> HTTPCache
+    HTTPCache --> Compression
+    Compression --> HTTP2
+    HTTP2 --> MinReq
+    
+    HorizScale --> AutoScale
+    AutoScale --> DBReplica
+    DBReplica --> ShardDB
+    ShardDB --> LoadDist
+    
+    APM --> RealUMon
+    RealUMon --> Profiling
+    Profiling --> Bottleneck
+    Bottleneck --> PerTest

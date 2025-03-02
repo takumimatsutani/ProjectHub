@@ -1,0 +1,39 @@
+stateDiagram-v2
+    [*] --> TODO: タスク作成
+    
+    TODO --> IN_PROGRESS: 開始
+    IN_PROGRESS --> TODO: 中断
+    
+    IN_PROGRESS --> IN_REVIEW: レビュー依頼
+    IN_REVIEW --> IN_PROGRESS: レビュー差し戻し
+    
+    IN_REVIEW --> DONE: レビュー承認
+    DONE --> IN_PROGRESS: 再オープン
+    
+    DONE --> CLOSED: 完了確認
+    CLOSED --> [*]
+    
+    note right of TODO
+        未着手状態
+        期限設定可能
+    end note
+    
+    note right of IN_PROGRESS
+        作業中状態
+        進捗報告必要
+    end note
+    
+    note right of IN_REVIEW
+        レビュー中状態
+        レビュアー割当必要
+    end note
+    
+    note right of DONE
+        完了状態
+        確認待ち
+    end note
+    
+    note right of CLOSED
+        完全クローズ状態
+        再オープン不可
+    end note

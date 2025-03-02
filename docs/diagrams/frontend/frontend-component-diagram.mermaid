@@ -1,0 +1,150 @@
+classDiagram
+    class App {
+        +_app.tsx
+        +AppProvider
+        +Routing
+    }
+    
+    class Pages {
+        +Dashboard
+        +Projects
+        +Tasks
+        +Calendar
+        +Reports
+        +Settings
+    }
+    
+    class Templates {
+        +DashboardTemplate
+        +ProjectTemplate
+        +AuthTemplate
+        +SettingsTemplate
+    }
+    
+    class Layouts {
+        +MainLayout
+        +AuthLayout
+        +SidebarLayout
+    }
+    
+    class Components {
+        +Navigation
+        +Forms
+        +DataDisplay
+        +Feedback
+        +Overlay
+        +Utils
+    }
+    
+    class Navigation {
+        +Navbar
+        +Sidebar
+        +Tabs
+        +Breadcrumbs
+    }
+    
+    class Forms {
+        +Input
+        +Select
+        +DatePicker
+        +Toggle
+        +FileUpload
+        +FormBuilder
+    }
+    
+    class DataDisplay {
+        +Card
+        +Table
+        +KanbanBoard
+        +GanttChart
+        +Charts
+        +Avatar
+        +Badge
+    }
+    
+    class Feedback {
+        +Alert
+        +Toast
+        +Progress
+        +Spinner
+    }
+    
+    class Overlay {
+        +Modal
+        +Drawer
+        +Dropdown
+        +Tooltip
+    }
+    
+    class Utils {
+        +SearchBar
+        +Pagination
+        +SortableList
+        +DragDrop
+    }
+    
+    class Hooks {
+        +useAuth
+        +useProjects
+        +useTasks
+        +useTeams
+        +useNotifications
+        +useForm
+    }
+    
+    class Services {
+        +ApiService
+        +AuthService
+        +ProjectService
+        +TaskService
+        +UserService
+        +StorageService
+        +WebSocketService
+    }
+    
+    class Store {
+        +AuthStore
+        +ProjectStore
+        +TaskStore
+        +NotificationStore
+        +UIStore
+    }
+    
+    class Types {
+        +UserTypes
+        +ProjectTypes
+        +TaskTypes
+        +CommonTypes
+    }
+    
+    class Utils {
+        +Formatters
+        +Validators
+        +Helpers
+    }
+    
+    App -- Pages : uses >
+    Pages -- Templates : uses >
+    Templates -- Layouts : uses >
+    Layouts -- Components : uses >
+    
+    Components -- Navigation : contains >
+    Components -- Forms : contains >
+    Components -- DataDisplay : contains >
+    Components -- Feedback : contains >
+    Components -- Overlay : contains >
+    Components -- Utils : contains >
+    
+    Pages -- Hooks : uses >
+    Pages -- Services : uses >
+    Pages -- Store : uses >
+    Pages -- Types : uses >
+    
+    Hooks -- Services : uses >
+    Hooks -- Store : uses >
+    Hooks -- Types : uses >
+    
+    Services -- Types : uses >
+    Services -- Utils : uses >
+    
+    Store -- Types : uses >

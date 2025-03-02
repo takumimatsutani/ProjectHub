@@ -1,0 +1,47 @@
+flowchart TB
+    User["ユーザー (Web/Mobile)"] --> CloudFront
+    
+    subgraph "フロントエンド層"
+        CloudFront["AWS CloudFront"] --> NextJS["Next.js SPA"]
+    end
+    
+    subgraph "API層"
+        NextJS --> ALB["ALB + WAF"]
+        ALB --> APIGateway["API Gateway"]
+    end
+    
+    subgraph "バックエンド層"
+        APIGateway --> AuthService["認証サービス"]
+        APIGateway --> ProjectService["プロジェクト管理"]
+        APIGateway --> TaskService["タスク管理"]
+        APIGateway --> ReportService["レポート・分析"]
+        APIGateway --> NotificationService["通知サービス"]
+        APIGateway --> FileService["ファイル管理"]
+        
+        WSServer["WebSocket Server"] --> NotificationService
+    end
+    
+    subgraph "データ層"
+        AuthService --> RDS["Aurora PostgreSQL"]
+        ProjectService --> RDS
+        TaskService --> RDS
+        ReportService --> RDS
+        NotificationService --> RDS
+        
+        TaskService --> Redis["ElastiCache Redis"]
+        ReportService --> Redis
+        ReportService --> ES["Elasticsearch"]
+        
+        FileService --> S3["Amazon S3"]
+    end
+    
+    subgraph "外部連携"
+        IntegrationLayer["Integration Layer"]
+        IntegrationLayer <--> GitHub["GitHub/GitLab"]
+        IntegrationLayer <--> Slack["Slack/Teams"]
+        IntegrationLayer <--> Email["メールサービス"]
+        
+        NotificationService --> IntegrationLayer
+    end
+    
+    NextJS -.-> WSServer

@@ -1,0 +1,68 @@
+flowchart TB
+    subgraph "フロントエンドセキュリティ"
+        CSP["Content Security Policy"]
+        CORS["CORS 設定"]
+        XSS["XSS 対策"]
+        CSRF["CSRF 対策"]
+        HTTPOnly["HTTPOnly Cookie"]
+    end
+    
+    subgraph "API セキュリティ"
+        JWT["JWT 認証"]
+        RateLimit["レート制限"]
+        InputValid["入力検証"]
+        WAF["AWS WAF"]
+        APIAuth["API 認証"]
+    end
+    
+    subgraph "バックエンドセキュリティ"
+        SQL["SQL インジェクション対策"]
+        BCrypt["BCrypt パスワードハッシュ"]
+        SecSession["セキュアセッション管理"]
+        SecHeaders["セキュリティヘッダー"]
+        Audit["監査ログ"]
+    end
+    
+    subgraph "インフラセキュリティ"
+        VPC["VPC セキュリティグループ"]
+        IAM["IAM 最小権限"]
+        SecretsM["Secrets Manager"]
+        Encryption["データ暗号化"]
+        Guard["GuardDuty"]
+    end
+    
+    subgraph "デプロイセキュリティ"
+        ImageScan["コンテナイメージスキャン"]
+        DepCheck["依存関係チェック"]
+        SAST["静的解析"]
+        PenTest["ペネトレーションテスト"]
+    end
+    
+    User["ユーザー"] --> CSP
+    CSP --> CORS
+    CORS --> XSS
+    XSS --> CSRF
+    CSRF --> HTTPOnly
+    
+    HTTPOnly --> JWT
+    JWT --> RateLimit
+    RateLimit --> InputValid
+    InputValid --> WAF
+    WAF --> APIAuth
+    
+    APIAuth --> SQL
+    SQL --> BCrypt
+    BCrypt --> SecSession
+    SecSession --> SecHeaders
+    SecHeaders --> Audit
+    
+    Audit --> VPC
+    VPC --> IAM
+    IAM --> SecretsM
+    SecretsM --> Encryption
+    Encryption --> Guard
+    
+    Guard --> ImageScan
+    ImageScan --> DepCheck
+    DepCheck --> SAST
+    SAST --> PenTest

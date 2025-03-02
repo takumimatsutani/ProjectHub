@@ -1,0 +1,36 @@
+sequenceDiagram
+    actor User
+    participant NextJS as Next.js Frontend
+    participant APIGateway as API Gateway
+    participant TaskController as Task Controller
+    participant TaskService as Task Service
+    participant ProjectService as Project Service
+    participant UserService as User Service
+    participant TaskRepo as Task Repository
+    participant DB as Database
+    participant Notification as Notification Service
+    
+    User->>NextJS: タスク作成フォーム入力
+    NextJS->>NextJS: フォームバリデーション
+    NextJS->>APIGateway: POST /api/tasks
+    APIGateway->>TaskController: createTask(TaskDTO)
+    TaskController->>TaskService: createTask(TaskDTO)
+    
+    TaskService->>ProjectService: checkProjectAccess(projectId, userId)
+    ProjectService->>TaskService: アクセス確認結果
+    
+    TaskService->>UserService: getUser(assigneeId)
+    UserService->>TaskService: User
+    
+    TaskService->>TaskRepo: save(Task)
+    TaskRepo->>DB: INSERT INTO tasks
+    DB->>TaskRepo: Task
+    TaskRepo->>TaskService: Task
+    
+    TaskService->>Notification: sendNotification(assigneeId, taskId)
+    Notification-->>User: タスク割り当て通知
+    
+    TaskService->>TaskController: TaskDTO
+    TaskController->>APIGateway: TaskDTO
+    APIGateway->>NextJS: TaskDTO
+    NextJS->>User: タスク作成成功表示
