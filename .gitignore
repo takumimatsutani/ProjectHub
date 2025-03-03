@@ -1,0 +1,168 @@
+### プロジェクト全体 ###
+# 環境変数ファイル
+.env
+.env.*
+!.env.example
+
+# システムファイル
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ログファイル
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# エディタディレクトリ/ファイル
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# キャッシュと一時ファイル
+.tmp/
+.cache/
+temp/
+tmp/
+
+### フロントエンド (Next.js) ###
+# 依存関係
+/frontend/node_modules/
+
+# ビルドディレクトリ
+/frontend/.next/
+/frontend/out/
+
+# キャッシュ
+/frontend/.swc/
+/frontend/.turbo
+
+# カバレッジ
+/frontend/coverage/
+
+# Next.jsによって生成された型
+/frontend/next-env.d.ts
+
+# タイプスクリプトキャッシュ
+/frontend/*.tsbuildinfo
+
+# PWA関連
+/frontend/public/sw.js
+/frontend/public/workbox-*.js
+/frontend/public/worker-*.js
+/frontend/public/sw.js.map
+/frontend/public/workbox-*.js.map
+/frontend/public/worker-*.js.map
+
+# デバッグ
+/frontend/.vercel
+/frontend/.netlify
+
+# ストーリーブック
+/frontend/storybook-static/
+
+# テスト
+/frontend/.nyc_output
+
+### バックエンド (Spring Boot) ###
+# ビルドディレクトリ
+/backend/build/
+/backend/target/
+/backend/bin/
+/backend/out/
+
+# Gradleキャッシュ
+/backend/.gradle/
+/backend/gradle-app.setting
+/backend/.gradletasknamecache
+
+# Mavenキャッシュ
+/backend/.mvn/
+
+# Javaキャッシュ
+/backend/.apt_generated/
+/backend/.apt_generated_test/
+/backend/.classpath
+/backend/.factorypath
+/backend/*.class
+/backend/hs_err_pid*
+/backend/*.hprof
+
+# プロパティファイル (環境変数)
+/backend/src/main/resources/application-dev.properties
+/backend/src/main/resources/application-prod.properties
+/backend/src/main/resources/application-local.properties
+/backend/src/main/resources/application-*.yml
+/backend/src/main/resources/application-*.yaml
+!/backend/src/main/resources/application.properties
+!/backend/src/main/resources/application.yml
+!/backend/src/main/resources/application.yaml
+
+# データベース
+/backend/*.sqlite
+/backend/*.db
+/backend/*.h2.db
+/backend/*.trace.db
+/backend/*.mv.db
+
+### インフラストラクチャ ###
+# Terraformファイル
+/infrastructure/.terraform/
+/infrastructure/*.tfstate
+/infrastructure/*.tfstate.backup
+/infrastructure/*.tfvars
+/infrastructure/.terragrunt-cache/
+/infrastructure/terraform.tfvars
+/infrastructure/terraform.tfvars.json
+/infrastructure/.terraform.lock.hcl
+
+# AWS
+/infrastructure/.aws/
+/infrastructure/aws-credentials.json
+
+# Docker
+/infrastructure/docker-compose.override.yml
+
+# Kubernetes
+/infrastructure/kubeconfig
+/infrastructure/kube/secrets/
+
+### ドキュメント ###
+# 生成された文書
+/docs/_build/
+/docs/build/
+/docs/site/
+/docs/_site/
+
+### その他 ###
+# CI/CD
+.github/workflows/generated/
+
+# バックアップファイル
+*.bak
+*.backup
+*.old
+*.orig
+
+# 大きなバイナリファイル
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+*.iso
+*.jar
+*.war
+*.ear
+
+# アップロードファイル
+/uploads/
+/media/

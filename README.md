@@ -1,4 +1,56 @@
-# ProjectHub
+# Node.js
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.pnpm-debug.log
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+coverage/
+.next/
+out/
+dist/
+build/
+
+# Java/Spring Boot
+target/
+build/
+.gradle/
+*.jar
+*.war
+*.ear
+*.class
+*.log
+.mvn/
+mvnw
+mvnw.cmd
+HELP.md
+spring-boot-*.pid
+
+# IDE - IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# IDE - VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# その他
+*.log
+*.swp
+*.bak# ProjectHub
 
 ## プロジェクト概要
 
